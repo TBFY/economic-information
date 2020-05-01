@@ -2,7 +2,7 @@
 <p align="center"><img width=40% src="https://github.com/TBFY/edp-economic-data-portal/blob/master/logo.png"></p>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-![Python](https://img.shields.io/badge/python-blue.svg)
+![Notebook](https://img.shields.io/badge/Jupyter_Notebook-red.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/TBFY/edp-economic-data-portal.svg)](https://github.com/TBFY/edp-economic-data-portal/issues)
 [![License](https://img.shields.io/badge/license-Apache2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
