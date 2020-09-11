@@ -1,0 +1,48 @@
+PREFIX ocds: <http://data.tbfy.eu/ontology/ocds#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX tbfy: <http://data.tbfy.eu/ontology/tbfy#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rov: <http://www.w3.org/ns/regorg#>
+PREFIX dbp: <http://dbpedia.org/ontology/>
+PREFIX schema: <http://schema.org/>
+SELECT distinct ?qid ?qtitle ?qdescription ?qstatus ?buyer ?supplier ?qamount ?qcurrency ?qstartdate ?qenddate ?qdocumenturl
+WHERE {
+#Tender information	
+	?qid a ocds:Tender .
+  OPTIONAL { ?qid dct:title ?qtitle } .
+	OPTIONAL { ?qid dct:description ?qdescription } .
+	OPTIONAL { ?qid ocds:tenderStatus ?qstatus } .
+#ContractingProcess information	  
+	OPTIONAL { ?contproc a ocds:ContractingProcess .
+    ?contproc ocds:hasTender ?qid .
+    ?contproc ocds:hasRelease ?release }.
+    OPTIONAL {?s a ocds:Organisation .
+    ?s ocds:isBuyerFor ?contproc .
+    ?s ocds:legalName ?buyer  }.
+#Object Property hasAward 
+	OPTIONAL {?contproc ocds:hasAward ?hasaw.
+   ?t a ocds:Organisation .
+   ?t ocds:isSupplierFor ?hasaw .
+	OPTIONAL { ?t owl:sameAs ?sas .
+            ?sas rov:legalName ?supplier ;
+                 dbp:jurisdiction ?qjurisdiction  }.
+#Object Property hasAwardedContractPeriod
+	OPTIONAL { ?hasaw ocds:hasAwardedContractPeriod ?cperiod .
+	OPTIONAL { ?cperiod ocds:periodStartDate ?qstartdate .
+             ?cperiod ocds:periodEndDate ?qenddate }}
+#Object Property hasAwardValue
+  OPTIONAL { ?hasaw ocds:hasAwardValue ?valr .
+  OPTIONAL { ?valr ocds:valueAmount ?qamount .
+             ?valr ocds:valueCurrency ?qcurrency }} .
+  } 
+#Object Property hasDocument
+	OPTIONAL {?qid ocds:hasDocument ?hdoc .
+	OPTIONAL { ?hdoc ocds:documentType ?qdocumenttype ;
+				dct:language ?qdocumentlanguage ;
+             	schema:URL ?qdocumenturl }} .
+
+#by AwardedContractPeriod
+FILTER ((?qstartdate>="2019-01-01T00:00:00Z"^^xsd:dateTime) && (?qenddate<="2020-12-31T00:00:00Z"^^xsd:dateTime))              	
+}
+LIMIT 100
