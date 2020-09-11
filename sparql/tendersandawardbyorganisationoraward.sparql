@@ -1,0 +1,40 @@
+PREFIX rov: <http://www.w3.org/ns/regorg#>
+PREFIX dbp: <http://dbpedia.org/ontology/>
+PREFIX ocds: <http://data.tbfy.eu/ontology/ocds#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX ebg: <http://data.businessgraph.io/ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX dct: <http://purl.org/dc/terms/>
+
+SELECT ?ss ?supaward ?qtenderid ?qtitle ?qdescription ?qlegalname ?qjurisdiction ?qnumemployees ?qawarddate ?qawardtitle
+?qawarddescription ?qawardstatus ?qawardstartdate ?qawardenddate ?qawardamount ?qawardcurrency
+WHERE {
+  ?s ocds:isSupplierFor ?supaward .
+  ?s owl:sameAs ?ss .
+  ?ss rov:legalName ?qlegalname .
+  ?ss dbp:jurisdiction ?qjurisdiction .
+  ?ss ebg:numberOfEmployees ?qnumemployees .
+
+  OPTIONAL { ?supaward dct:title ?qawardtitle } .
+  OPTIONAL { ?supaward dct:description ?qawarddescription } .
+  OPTIONAL { ?supaward ocds:awardDate ?qawarddate } .
+  OPTIONAL { ?supaward ocds:awardStatus ?qawardstatus } .
+
+  #Object Property hasAwardedContractPeriod
+  OPTIONAL { ?supaward ocds:hasAwardedContractPeriod ?cperiod .
+  OPTIONAL { ?cperiod ocds:periodStartDate ?qawardstartdate .
+             ?cperiod ocds:periodEndDate ?qawardenddate }} .
+
+  #Object Property hasAwardValue
+  OPTIONAL { ?supaward ocds:hasAwardValue ?valr .
+  OPTIONAL { ?valr ocds:valueAmount ?qawardamount .
+             ?valr ocds:valueCurrency ?qawardcurrency }} .
+  OPTIONAL{ ?supaward ocds:isIssuedForTender ?qtenderid .
+  OPTIONAL { ?qtenderid dct:title ?qtitle } .
+	OPTIONAL { ?qtenderid dct:description ?qdescription } .
+  OPTIONAL { ?qtenderid ocds:tenderStatus ?qstatus } }.
+  #by organisation
+  filter (?ss= <http://data.tbfy.eu/organisation/gb-09537184>) 
+#by award
+# filter (?supaward= <http://data.tbfy.eu/award/ocds-0c46vo-0001-270e7ae7-baba-4d08-8b5c-ab2e5b5cefa0_b3b83e67-a126-4de8-b944-8eac9b974747>) 
+}
