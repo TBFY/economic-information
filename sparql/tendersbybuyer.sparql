@@ -1,0 +1,34 @@
+PREFIX ocds: <http://data.tbfy.eu/ontology/ocds#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX rov: <http://www.w3.org/ns/regorg#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX dbp: <http://dbpedia.org/ontology/>
+PREFIX bgh: <http://data.businessgraph.io/>
+PREFIX schema: <http://schema.org/>
+
+SELECT distinct ?s ?idcontractprocess ?idtender ?qjurisdiction ?qlegalname ?qstreet ?qpostalcode ?qlocality ?qcountry ?qname ?qemail ?qtelephone ?qurl ?qfax ?qtitle ?qstatus
+WHERE {
+  ?s a ocds:Organisation .
+  ?s ocds:isBuyerFor ?idcontractprocess .
+  ?s ocds:legalName ?qlegalname .
+  OPTIONAL { ?s owl:sameAs ?sas .
+             ?sas rov:legalName ?qlegalname ;
+                  dbp:jurisdiction ?qjurisdiction } .
+  OPTIONAL { ?s ocds:hasAddress ?haddress .
+            OPTIONAL { ?haddress schema:streetAddress ?qstreet .
+                       ?haddress schema:postalCode ?qpostalcode .
+                       ?haddress schema:addressLocality ?qlocality .
+                       ?haddress schema:addressCountry ?qcountry }} .
+  OPTIONAL { ?s ocds:hasContactPoint ?hcp .
+            OPTIONAL { ?hcp schema:name ?qname .
+                       ?hcp schema:email ?qemail .
+                       ?hcp schema:telephone ?qtelephone .
+                       OPTIONAL { ?hcp schema:URL ?qurl .
+                                  ?hcp schema:faxNumber ?qfax }}} .
+  OPTIONAL {  ?idcontractprocess ocds:hasTender ?idtender .
+    
+  OPTIONAL { ?idtender dct:title ?qtitle } .
+	OPTIONAL { ?idtender dct:description ?qdescription } .
+	OPTIONAL { ?idtender ocds:tenderStatus ?qstatus }} 
+  filter(regex(?qlegalname,"Wolverhampton City Council","i"))
+}
