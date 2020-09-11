@@ -1,0 +1,48 @@
+PREFIX ocds: <http://data.tbfy.eu/ontology/ocds#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX tbfy: <http://data.tbfy.eu/ontology/tbfy#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rov: <http://www.w3.org/ns/regorg#>
+PREFIX dbp: <http://dbpedia.org/ontology/>
+PREFIX schema: <http://schema.org/>
+SELECT distinct ?qid ?qtitle ?qdescription ?qstatus ?buyer ?supplier ?qamount ?qcurrency ?qstartdate ?qenddate ?qdocumenturl
+WHERE {
+#Tender information	
+	?qid a ocds:Tender .
+  OPTIONAL { ?qid dct:title ?qtitle } .
+	OPTIONAL { ?qid dct:description ?qdescription } .
+	OPTIONAL { ?qid ocds:tenderStatus ?qstatus } .
+#ContractingProcess information	  
+	OPTIONAL { ?contproc a ocds:ContractingProcess .
+    ?contproc ocds:hasTender ?qid .
+    ?contproc ocds:hasRelease ?release }.
+    OPTIONAL {?s a ocds:Organisation .
+    ?s ocds:isBuyerFor ?contproc .
+    ?s ocds:legalName ?buyer  }.
+#Object Property hasAward 
+	OPTIONAL {?contproc ocds:hasAward ?hasaw.
+   ?t a ocds:Organisation .
+   ?t ocds:isSupplierFor ?hasaw .
+	OPTIONAL { ?t owl:sameAs ?sas .
+            ?sas rov:legalName ?supplier ;
+                 dbp:jurisdiction ?qjurisdiction  }.
+#Object Property hasAwardedContractPeriod
+	OPTIONAL { ?hasaw ocds:hasAwardedContractPeriod ?cperiod .
+	OPTIONAL { ?cperiod ocds:periodStartDate ?qstartdate .
+             ?cperiod ocds:periodEndDate ?qenddate }}
+#Object Property hasAwardValue
+  OPTIONAL { ?hasaw ocds:hasAwardValue ?valr .
+  OPTIONAL { ?valr ocds:valueAmount ?qamount .
+             ?valr ocds:valueCurrency ?qcurrency }} .
+  } 
+#Object Property hasDocument
+	OPTIONAL {?qid ocds:hasDocument ?hdoc .
+	OPTIONAL { ?hdoc ocds:documentType ?qdocumenttype ;
+				dct:language ?qdocumentlanguage ;
+             	schema:URL ?qdocumenturl }} .
+#id_licitacion
+filter (?qid= <http://data.tbfy.eu/tender/ocds-0c46vo-0001-270e7ae7-baba-4d08-8b5c-ab2e5b5cefa0_ocds-b5fd17-43881de8-bd22-4875-9474-ba36dfe896fe-leedscity001-dn385104-91947270>)
+# id_adjudicacion 
+#filter (?hasaw= <http://data.tbfy.eu/award/ocds-0c46vo-0001-270e7ae7-baba-4d08-8b5c-ab2e5b5cefa0_b3b83e67-a126-4de8-b944-8eac9b974747>) 
+}
