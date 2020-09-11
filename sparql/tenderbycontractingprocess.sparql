@@ -1,0 +1,46 @@
+PREFIX ocds: <http://data.tbfy.eu/ontology/ocds#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX tbfy: <http://data.tbfy.eu/ontology/tbfy#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rov: <http://www.w3.org/ns/regorg#>
+PREFIX dbp: <http://dbpedia.org/ontology/>
+PREFIX schema: <http://schema.org/>
+SELECT distinct  ?contproc ?qid ?qtitle ?qdescription ?qstatus ?buyer ?supplier ?qamount ?qcurrency ?qstartdate ?qenddate ?qdocumenturl
+WHERE {
+
+#ContractingProcess information	  
+ ?contproc a ocds:ContractingProcess .
+  OPTIONAL {  ?contproc ocds:hasTender ?qid .
+    ?contproc ocds:hasRelease ?release .}
+    OPTIONAL {?s a ocds:Organisation .
+    ?s ocds:isBuyerFor ?contproc .
+    ?s ocds:legalName ?buyer  }.
+#Tender information	
+  OPTIONAL {	?qid a ocds:Tender .}
+  OPTIONAL { ?qid dct:title ?qtitle } .
+	OPTIONAL { ?qid dct:description ?qdescription } .
+	OPTIONAL { ?qid ocds:tenderStatus ?qstatus } .
+#Object Property hasAward 
+	OPTIONAL {?contproc ocds:hasAward ?hasaw.
+   ?t a ocds:Organisation .
+   ?t ocds:isSupplierFor ?hasaw .
+	OPTIONAL { ?t owl:sameAs ?sas .
+            ?sas rov:legalName ?supplier ;
+                 dbp:jurisdiction ?qjurisdiction  }.
+#Object Property hasAwardedContractPeriod
+	OPTIONAL { ?hasaw ocds:hasAwardedContractPeriod ?cperiod .
+	OPTIONAL { ?cperiod ocds:periodStartDate ?qstartdate .
+             ?cperiod ocds:periodEndDate ?qenddate }}
+#Object Property hasAwardValue
+  OPTIONAL { ?hasaw ocds:hasAwardValue ?valr .
+  OPTIONAL { ?valr ocds:valueAmount ?qamount .
+             ?valr ocds:valueCurrency ?qcurrency }} .
+  } 
+#Object Property hasDocument
+	OPTIONAL {?qid ocds:hasDocument ?hdoc .
+	OPTIONAL { ?hdoc ocds:documentType ?qdocumenttype ;
+				dct:language ?qdocumentlanguage ;
+             	schema:URL ?qdocumenturl }} .
+  filter (?contproc=<http://data.tbfy.eu/contractingProcess/ocds-0c46vo-0009-DN379620-1>) 
+}
