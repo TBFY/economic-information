@@ -6,7 +6,7 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rov: <http://www.w3.org/ns/regorg#>
 PREFIX dbp: <http://dbpedia.org/ontology/>
 PREFIX schema: <http://schema.org/>
-SELECT distinct ?qid ?qtitle ?qdescription ?qstatus ?buyer ?supplier ?qamount ?qcurrency ?qstartdate ?qenddate ?qdocumenturl
+SELECT distinct ?qid ?qtitle ?qdescription ?qstatus ?buyer ?sas ?supplier ?qamount ?qcurrency ?qstartdate ?qenddate ?qdocumenturl
 WHERE {
 #Tender information	
 	?qid a ocds:Tender .
