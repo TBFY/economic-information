@@ -19,3 +19,11 @@ Created a sample notebook where you can find information about Zaragoza City Cou
 
 ## Contributing
 Please take a look at our [contributing](https://github.com/TBFY/general/blob/master/guides/how-to-contribute.md) guidelines if you're interested in helping!
+
+## Lastest Stable Release
+The repository with **open source** related to our services related to public procurement and developed in the project:
+* Visualisation service
+* Management system
+* APIs (OCDS standard, API-Zaragoza )
+
+[https://github.com/zaragoza-sedeelectronica/ext.contratacion](https://github.com/zaragoza-sedeelectronica/ext.contratacion)
